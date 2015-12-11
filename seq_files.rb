@@ -55,7 +55,11 @@ strDirs.each { | dFrames |
 	
 	strFiles.each { | f |
 		strNewFile = "%04d" % iFileCounter
-		FileUtils.cp("#{d}\\#{f}", "#{strDestination}\\#{strNewFile}.png")
+#Copy File
+		#		FileUtils.cp("#{d}\\#{f}", "#{strDestination}\\#{strNewFile}.png")
+#Move File
+				FileUtils.mv("#{d}\\#{f}", "#{strDestination}\\#{strNewFile}.png")
+		
 		iFileCounter += 1
 	}
 	
