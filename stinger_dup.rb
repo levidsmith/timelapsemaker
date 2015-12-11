@@ -1,3 +1,11 @@
+# Timelapse Maker
+# 2015 Levi D. Smith
+# Web: levidsmith.com
+# Twitter: @GaTechGrad
+
+# This was made obsolete by "dup.rb"
+# Should be considered for removal
+
 strStingerFile = "stinger"
 iFile = 0
 iOffset = 4992	

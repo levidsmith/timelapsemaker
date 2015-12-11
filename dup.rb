@@ -1,3 +1,14 @@
+# Timelapse Maker
+# 2015 Levi D. Smith
+# Web: levidsmith.com
+# Twitter: @GaTechGrad
+
+# This file duplicates an image in a directory
+# the specified number of times
+# This is useful for displaying a static image
+# such as a title over a number of seconds in
+# a time lapse
+
 #iFrom = 3222
 #iTimes = 70
 

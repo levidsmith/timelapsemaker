@@ -1,3 +1,15 @@
+# Timelapse Maker
+# 2015 Levi D. Smith
+# Web: levidsmith.com
+# Twitter: @GaTechGrad
+
+# This looks for all of the FLV and MP4 files
+# in a directory, and outputs all of the frame
+# images of the timelapse
+# ffmpeg must be installed
+# The interval can be specified (one frame for 
+# every N number of seconds in real time)
+
 strFiles = Dir.entries(".").select { | f | File.file? f }
 FFMPEG = 'E:\ldsmith\openbroadcaster\ffmpeg\ffmpeg-20131222-git-9b195dd-win64-static\bin\ffmpeg'
 FRAME_INTERVAL=15

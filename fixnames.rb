@@ -1,3 +1,12 @@
+# Timelapse Maker
+# 2015 Levi D. Smith
+# Web: levidsmith.com
+# Twitter: @GaTechGrad
+
+# This is used for resequencing the file names
+# in a directory, in case the file name numbers
+# are not sequential (required by VirtualDub)
+
 require 'fileutils'
 
 files = Dir.entries(".")
