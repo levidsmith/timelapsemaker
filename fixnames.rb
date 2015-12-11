@@ -3,9 +3,10 @@
 # Web: levidsmith.com
 # Twitter: @GaTechGrad
 
-# This is used for resequencing the file names
-# in a directory, in case the file name numbers
-# are not sequential (required by VirtualDub)
+# This is for adding an extra zero if only three numbers
+# are specified in the image filenames
+# The new encode.rb should generate filenames with four 
+# numbers by default
 
 require 'fileutils'
 
@@ -23,7 +24,6 @@ files.select! { | f |
 }
 
 files.each { | f |
-#	print "file: #{f} len: #{f.size}\n"
 	
 	if (f.size == 10) 
 		print "file: #{f} newname: #{f[(0..2)]}0#{f[(3..9)]}  \n"
