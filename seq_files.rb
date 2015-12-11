@@ -12,12 +12,18 @@
 
 require 'fileutils'
 
-strDirs = Dir.entries(".").select { | f | File.directory? f }
+FRAMES_DIR = "frames"
+OUT_DIR = "out"
 
-strDestination = "out"
+
+strDirs = Dir.entries("#{FRAMES_DIR}").select { | f | File.directory? "#{FRAMES_DIR}/#{f}" }
+
+#strDestination = "out"
+strDestination = OUT_DIR
 
 
 strDirs.select! { | f |
+#	puts "DIR: #{f}"
 	if ( (! f.start_with? ".") && (f != strDestination) )
 		f
 	else
@@ -25,10 +31,20 @@ strDirs.select! { | f |
 	end
 }
 
-system("mkdir #{strDestination}")
+#exit
+
+#system("mkdir #{strDestination}")
+if (File.directory? OUT_DIR)
+	system("move #{OUT_DIR} #{OUT_DIR}#{Time.now.strftime('%Y%m%d_%H%M%S')}")
+	system("mkdir #{OUT_DIR}")
+else
+	system("mkdir #{OUT_DIR}")
+end
+
 
 iFileCounter = 0
-strDirs.each { | d |
+strDirs.each { | dFrames |
+	d = FRAMES_DIR + "\\" + dFrames
 	print "dir: #{d}" + "\n"
 	
 	strFiles = Dir.entries(d).select { | f |
