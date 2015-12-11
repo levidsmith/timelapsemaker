@@ -1,0 +1,12 @@
+Timelapse Maker
+2015 Levi D. Smith
+Web: levidsmith.competition
+Twitter: @GaTechGrad
+
+Description
+Timelapse Maker is a tool that I developed for making time lapse videos.  The scripts were created for the videos that I captured during the Ludum Dare game development competition.  I currently use Open Broadcaster (OBS) for capturing video, which will capture video in FLV or MP4 format as you are streaming.  The "encode.rb" script will go through a directory and convert the video files into numerically sequenced folders of image files.  The "seq_files.rb" will go through those folders and order all of the images in one "out" folder with sequential filenames.  That folder can be opened in VirtualDub to create a time lapse video.  Select "Audio" > "Source Audio" to add background music, and it must be longer than the time lapse.  Use Audacity to loop and extend the background music if needed.  Use the "dup.rb" script to duplicate a file, which is useful for displaying one frame over a number of seconds.
+
+Requirements
+Ruby
+ffmpeg
+VirtualDub
