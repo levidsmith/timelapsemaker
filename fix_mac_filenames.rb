@@ -4,7 +4,7 @@
 # Twitter: @GaTechGrad
 
 # This is for date timestamp format for filename generated on the Mac
-# Assumes all FLV files are Mac files;  Should be modified to look at filename format instead
+# This will update files with a space in the filename after the date
 
 require 'fileutils'
 
