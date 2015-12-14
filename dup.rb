@@ -9,6 +9,11 @@
 # such as a title over a number of seconds in
 # a time lapse
 
+require 'fileutils'
+
+
+OUT_DIR = "out"
+
 # The image filename number
 iFrom = ARGV[0].to_i
 
@@ -18,10 +23,15 @@ iTimes = ARGV[1].to_i
 i = 1
 
 while (i < iTimes)
-	str = "copy #{iFrom}.png #{iFrom + i}.png"
+#	str = "copy #{iFrom}.png #{iFrom + i}.png"
 
-	puts str
-	system str
+#	puts str
+#	system str
+
+	puts "Copying " + "#{OUT_DIR}\\#{iFrom}.png" + " to " + "#{OUT_DIR}\\#{iFrom + i}.png"
+
+		FileUtils.cp("#{OUT_DIR}\\#{iFrom}.png", "#{OUT_DIR}\\#{iFrom + i}.png")
+
 	i += 1
 
 end
