@@ -1,0 +1,1 @@
+puts "ffmpeg -i input.flv -codec copy output.mp4"

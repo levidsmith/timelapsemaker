@@ -23,6 +23,8 @@ strFiles = Dir.entries("#{filePath}").select { | f | File.file?("#{filePath}/#{f
 FFMPEG = 'E:\ldsmith\openbroadcaster\ffmpeg\ffmpeg-20131222-git-9b195dd-win64-static\bin\ffmpeg'
 FRAMES_DIR = "frames"
 
+VIDEO_RESOLUTION='1920x1080'
+
 FRAME_INTERVAL_DEFAULT=15
 frameInterval=FRAME_INTERVAL_DEFAULT
 
@@ -65,7 +67,7 @@ strFiles.each {
 	system("mkdir #{strDir}")
 
 #    print FFMPEG + " -i \"#{filePath}\\#{strFile}\" -f image2 -vf fps=fps=1/15 #{strDir}\\img%04d.png"
-	strCommand = FFMPEG + " -i \"#{filePath}\\#{strFile}\" -f image2 -s 1280x720 -vf fps=fps=1/#{frameInterval} #{strDir}\\img%04d.png"
+	strCommand = FFMPEG + " -i \"#{filePath}\\#{strFile}\" -f image2 -s #{VIDEO_RESOLUTION} -vf fps=fps=1/#{frameInterval} #{strDir}\\img%04d.png"
 	
 #	print(FFMPEG + " -i \"#{filePath}\\#{strFile}\" -f image2 -s 1280x720 -vf fps=fps=1/#{FRAME_INTERVAL} #{strDir}\\img%04d.png")
 #	system(FFMPEG + " -i \"#{filePath}\\#{strFile}\" -f image2 -s 1280x720 -vf fps=fps=1/#{FRAME_INTERVAL} #{strDir}\\img%04d.png")
