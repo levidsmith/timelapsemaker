@@ -41,7 +41,7 @@ end
 
 strFiles.select! { 
 	| f |
-	f =~ /.*\.flv|.*\.mp4/
+	f =~ /.*\.flv|.*\.mp4|.*\.ts/
 
 }
 
