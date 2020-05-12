@@ -12,55 +12,55 @@
 
 require 'fileutils'
 
-FRAMES_DIR = "frames"
-OUT_DIR = "out"
+def seq_files(config)
+
+#	FRAMES_DIR = "frames"
+#	OUT_DIR = "out"
 
 
-strDirs = Dir.entries("#{FRAMES_DIR}").select { | f | File.directory? "#{FRAMES_DIR}/#{f}" }
 
-#strDestination = "out"
-strDestination = OUT_DIR
+	strDirs = Dir.entries("#{config.frames_dir}").select { | f | File.directory? "#{config.frames_dir}/#{f}" }
+
+	strDestination = config.out_dir
 
 
-strDirs.select! { | f |
-#	puts "DIR: #{f}"
-	if ( (! f.start_with? ".") && (f != strDestination) )
-		f
+	strDirs.select! { | f |
+		if ( (! f.start_with? ".") && (f != strDestination) )
+			f
+		else
+			nil
+		end
+	}
+
+	if (File.directory? config.out_dir)
+#		system("move #{config.out_dir} #{config.out_dir}#{Time.now.strftime('%Y%m%d_%H%M%S')}")
+#		system("mkdir #{config.out_dir}")
+		FileUtils.mv("#{config.out_dir}", "#{config.out_dir}#{Time.now.strftime('%Y%m%d_%H%M%S')}")
+		FileUtils.mkdir(config.out_dir)
 	else
-		nil
+#		system("mkdir #{config.out_dir}")
+		FileUtils.mkdir(config.out_dir)
+
 	end
-}
-
-#exit
-
-#system("mkdir #{strDestination}")
-if (File.directory? OUT_DIR)
-	system("move #{OUT_DIR} #{OUT_DIR}#{Time.now.strftime('%Y%m%d_%H%M%S')}")
-	system("mkdir #{OUT_DIR}")
-else
-	system("mkdir #{OUT_DIR}")
-end
 
 
-iFileCounter = 0
-strDirs.each { | dFrames |
-	d = FRAMES_DIR + "\\" + dFrames
-	print "dir: #{d}" + "\n"
+	iFileCounter = 0
+	strDirs.each { | dFrames |
+		d = config.frames_dir + "\\" + dFrames
+		print "dir: #{d}" + "\n"
 	
-	strFiles = Dir.entries(d).select { | f |
-		File.file? d + "\\" + f
-	}
+		strFiles = Dir.entries(d).select { | f |
+			File.file? d + "\\" + f
+		}
 	
 	
 	
-	strFiles.each { | f |
-		strNewFile = "%04d" % iFileCounter
-#Copy File
-		#		FileUtils.cp("#{d}\\#{f}", "#{strDestination}\\#{strNewFile}.png")
-#Move File
-				FileUtils.mv("#{d}\\#{f}", "#{strDestination}\\#{strNewFile}.png")
+		strFiles.each { | f |
+			strNewFile = "%04d" % iFileCounter
+			FileUtils.mv("#{d}\\#{f}", "#{strDestination}\\#{strNewFile}.png")
 		
-		iFileCounter += 1
-	}
+			iFileCounter += 1
+		}
 	
-}
+	}
+end
