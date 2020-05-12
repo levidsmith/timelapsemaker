@@ -64,7 +64,7 @@ def makeWindow(config)
 #Horizontal row panel for timelapse frames
 	panelRow = Gtk::Box.new(:horizontal, 8)
 
-	labelFrameInterval = Gtk::Label.new("Frame Interval")
+	labelFrameInterval = Gtk::Label.new("Real time seconds between frames")
 	panelRow.add(labelFrameInterval)
 	labelFrameInterval.show
 	
@@ -118,6 +118,20 @@ def makeWindow(config)
 	
 	panel.add(panelRow)
 
+
+#Horizontal row panel for VirtualDub
+	panelRow = Gtk::Box.new(:horizontal, 8)
+
+	labelVirtualDub = Gtk::Label.new("VirtualDub executable")
+	panelRow.add(labelVirtualDub)
+	
+	textVirtualDub = Gtk::Entry.new()
+	textVirtualDub.set_width_chars(50)
+	textVirtualDub.text = config.virtual_dub_exe
+	panelRow.add(textVirtualDub)
+	
+	panel.add(panelRow)
+
 	
 
 #Button panel
@@ -127,20 +141,12 @@ def makeWindow(config)
 	button.signal_connect "clicked" do | _widget |
 		puts "Generate Frames"
 		
-		hasErrors = checkValues(textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text)
+		hasErrors = checkValues(textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text, textVirtualDub.text)
 		if (!hasErrors) 
-			saveToConfig(config, textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text)
+			saveToConfig(config, textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text, textVirtualDub.text)
 		end
-#		config.ffmpeg_exe = textFFMPEG.text
-#		config.source_dir = textSourceFolder.text
-#		config.frames_dir = textFramesFolder.text
-#		config.out_dir = textOutputFolder.text
-#		config.video_resolution = textVideoResolution.text
-#		config.frame_interval = textFrameInterval.text
-#		config.writeToFile(CONFIG_FILE)
 
 		puts "Generating Frames"
-#		encode(config)
 		generate_frame_images(config)
 		
 		strMessage = "Frame images generated\nRecommend opening the " + config.frames_dir + " folder and removing any unwanted frames from the timelapse.  Then run Sequence Images"
@@ -159,6 +165,9 @@ def makeWindow(config)
 	button = Gtk::Button.new(:label => "Sequence Images")
 	button.signal_connect "clicked" do | _widget |
 		puts "Sequencing images"
+		saveToConfig(config, textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text, textVirtualDub.text)
+
+		seq_files(config)
 
 		strMessage = "Sequence complete"
 		md = Gtk::MessageDialog.new :parent => $window,
@@ -177,8 +186,15 @@ def makeWindow(config)
 	button = Gtk::Button.new(:label => "Create timelapse")
 	button.signal_connect "clicked" do | _widget |
 		puts "Create timelapse"
+		saveToConfig(config, textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text, textVirtualDub.text)
+		
+		#Use gsub for the Windows specific backslashes.  Otherwise, VirtualDub will not open it with forward slashes
+		strFirstFrameImage =  File.join(config.out_dir, "0001.png").gsub('/', '\\')
+		puts strFirstFrameImage
 
-		strMessage = "Import generated files in " + config.out_dir + " into VeeDub"
+		system(config.virtual_dub_exe + " " + strFirstFrameImage)
+
+		strMessage = "Import generated files in " + config.out_dir + " into VirtualDub (http://www.virtualdub.org/) to generate an AVI"
 		md = Gtk::MessageDialog.new :parent => $window,
 				:flags => :destroy_with_parent, :type => :info,
 				:buttons_type => :close, :message => strMessage
@@ -193,7 +209,7 @@ def makeWindow(config)
 	button = Gtk::Button.new(:label => "Save and Quit")
 	button.signal_connect "clicked" do | _widget |
 		puts "Save and Quit"
-		saveToConfig(config, textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text)
+		saveToConfig(config, textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text, textVirtualDub.text)
 		
 		Gtk.main_quit
 	end
@@ -213,7 +229,7 @@ def readConfigFile(config)
 			   
 end
 
-def checkValues(inFFMPEG, inSourceFolder, inFramesFolder, inOutputFolder, inVideoResolution, inFrameInterval)
+def checkValues(inFFMPEG, inSourceFolder, inFramesFolder, inOutputFolder, inVideoResolution, inFrameInterval, inVirtualDub)
 	hasErrors = false
 	strMessage = ""
 
@@ -271,6 +287,12 @@ def checkValues(inFFMPEG, inSourceFolder, inFramesFolder, inOutputFolder, inVide
 	
 	end
 
+	if (!File.file? inVirtualDub)
+		strMessage +=  "Not a valid VirtualDub executable file: " + inVirtualDub + "\n"
+		hasErrors = true
+	end
+
+
 	
 	if (hasErrors)
 		md = Gtk::MessageDialog.new :parent => $window,
@@ -287,13 +309,14 @@ def checkValues(inFFMPEG, inSourceFolder, inFramesFolder, inOutputFolder, inVide
 end
 
 
-def saveToConfig(config, inFFMPEG, inSourceFolder, inFramesFolder, inOutputFolder, intVideoResolution, inFrameInterval)
+def saveToConfig(config, inFFMPEG, inSourceFolder, inFramesFolder, inOutputFolder, intVideoResolution, inFrameInterval, inVirtualDub)
 		config.ffmpeg_exe = inFFMPEG
 		config.source_dir = inSourceFolder
 		config.frames_dir = inFramesFolder
 		config.out_dir = inOutputFolder
 		config.video_resolution = intVideoResolution
 		config.frame_interval = inFrameInterval
+		config.virtual_dub_exe = inVirtualDub
 		config.writeToFile(CONFIG_FILE)
 
 end
