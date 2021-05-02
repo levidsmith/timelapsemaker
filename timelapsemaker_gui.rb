@@ -11,7 +11,7 @@ CONFIG_FILE = "config.json"
 
 
 def makeWindow(config)
-	$window = Gtk::Window::new("Timelapse Maker - 2020 Levi D. Smith")
+	$window = Gtk::Window::new("Timelapse Maker - 2021 Levi D. Smith")
 #	window.set_size_request(1024, 768)
 	$window.set_border_width(10)
 	
@@ -155,6 +155,7 @@ def makeWindow(config)
 	panel.add(panelRow)
 
 
+=begin
 #Horizontal row panel for VirtualDub
 	panelRow = Gtk::Box.new(:horizontal, 8)
 
@@ -176,6 +177,22 @@ def makeWindow(config)
 
 	
 	panel.add(panelRow)
+=end
+
+#Horizontal row panel for format
+	panelRow = Gtk::Box.new(:horizontal, 8)
+
+	labelFormat = Gtk::Label.new("Format")
+	panelRow.add(labelFormat)
+	
+	textFormat = Gtk::Entry.new()
+	textFormat.set_width_chars(50)
+	textFormat.editable = true
+	textFormat.text = config.format
+	panelRow.add(textFormat)
+	
+	
+	panel.add(panelRow)
 
 	
 
@@ -186,9 +203,11 @@ def makeWindow(config)
 	button.signal_connect "clicked" do | _widget |
 		puts "Generate Frames"
 		
-		hasErrors = checkValues(textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text, textVirtualDub.text)
+#		hasErrors = checkValues(textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text, textVirtualDub.text)
+		hasErrors = checkValues(textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text, textFormat.text)
 		if (!hasErrors) 
-			saveToConfig(config, textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text, textVirtualDub.text)
+#			saveToConfig(config, textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text, textVirtualDub.text)
+			saveToConfig(config, textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text, textFormat.text)
 		end
 
 		puts "Generating Frames"
@@ -210,7 +229,8 @@ def makeWindow(config)
 	button = Gtk::Button.new(:label => "Sequence Images")
 	button.signal_connect "clicked" do | _widget |
 		puts "Sequencing images"
-		saveToConfig(config, textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text, textVirtualDub.text)
+#		saveToConfig(config, textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text, textVirtualDub.text)
+		saveToConfig(config, textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text, textFormat.text)
 
 		seq_files(config)
 
@@ -231,7 +251,8 @@ def makeWindow(config)
 	button = Gtk::Button.new(:label => "Create timelapse")
 	button.signal_connect "clicked" do | _widget |
 		puts "Create timelapse"
-		saveToConfig(config, textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text, textVirtualDub.text)
+#		saveToConfig(config, textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text, textVirtualDub.text)
+		saveToConfig(config, textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text, textFormat.text)
 		
 		#Use gsub for the Windows specific backslashes.  Otherwise, VirtualDub will not open it with forward slashes
 		strFirstFrameImage =  File.join(config.out_dir, "0001.png").gsub('/', '\\')
@@ -256,7 +277,7 @@ def makeWindow(config)
 	button = Gtk::Button.new(:label => "Save and Quit")
 	button.signal_connect "clicked" do | _widget |
 		puts "Save and Quit"
-		saveToConfig(config, textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text, textVirtualDub.text)
+		saveToConfig(config, textFFMPEG.text, textSourceFolder.text, textFramesFolder.text, textOutputFolder.text, textVideoResolution.text, textFrameInterval.text, textFormat.text)
 		
 		Gtk.main_quit
 	end
@@ -356,14 +377,15 @@ def checkValues(inFFMPEG, inSourceFolder, inFramesFolder, inOutputFolder, inVide
 end
 
 
-def saveToConfig(config, inFFMPEG, inSourceFolder, inFramesFolder, inOutputFolder, intVideoResolution, inFrameInterval, inVirtualDub)
+def saveToConfig(config, inFFMPEG, inSourceFolder, inFramesFolder, inOutputFolder, intVideoResolution, inFrameInterval, inFormat)
 		config.ffmpeg_exe = inFFMPEG
 		config.source_dir = inSourceFolder
 		config.frames_dir = inFramesFolder
 		config.out_dir = inOutputFolder
 		config.video_resolution = intVideoResolution
 		config.frame_interval = inFrameInterval
-		config.virtual_dub_exe = inVirtualDub
+#		config.virtual_dub_exe = inVirtualDub
+		config.format = inFormat
 		config.writeToFile(CONFIG_FILE)
 
 end
@@ -478,10 +500,17 @@ end
 def createTimeLapse(config)
 
 #	strCommand = config.ffmpeg_exe + " -r 10/1 -i " + config.out_dir + "\\%4d.png -c:v libx264 -pix_fmt rgb24 -crf 0 " + config.out_dir + "\\" + "timelapse.mp4"
-	strCommand = config.ffmpeg_exe + " -r 10/1 -i " + config.out_dir + "\\%4d.png -c:v libx264 -pix_fmt yuv420p -crf 0 " + config.out_dir + "\\" + "timelapse.mp4"
+#	strCommand = config.ffmpeg_exe + " -r 10/1 -i " + config.out_dir + "\\%4d.png -c:v libx264 -pix_fmt yuv420p -crf 0 " + config.out_dir + "\\" + "timelapse." + config.format
 #strCommand = config.ffmpeg_exe + " -r 10/1 -i " + config.out_dir + "\\%4d.png " + config.out_dir + "\\" + "timelapse.mp4"
+
+#	strCommand = config.ffmpeg_exe + " -r 10/1 -i " + config.out_dir + "\\%4d.png ayuv " + config.out_dir + "\\" + "timelapse." + config.format
+
+	strCommand = config.ffmpeg_exe + " -r 10/1 -i " + config.out_dir + "\\%4d.png -c:v libx264 -crf 0  " + config.out_dir + "\\timelapse." + config.format
+
 	puts strCommand
 	system(strCommand)
+	
+	puts "*** File generated.  Note that file may not be playable in Windows video player, but should play in VLC or imported in Premiere Elements"
 
 
 #D:\ldsmith\tools\ffmpeg\bin\ffmpeg.exe -r 10/1 -i D:\ldsmith\openbroadcaster\timelapse\ld47\out\%4d.png -c:v libx264 -pix_fmt rgb24 -crf 0 D:\ldsmith\openbroadcaster\timelapse\ld47\out\out.mp4

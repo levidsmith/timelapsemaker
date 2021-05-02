@@ -10,6 +10,7 @@ class Config
 	attr_accessor :video_resolution
 	attr_accessor :frame_interval
 	attr_accessor :virtual_dub_exe
+	attr_accessor :format
 	
 	def initialize()
 		self.ffmpeg_exe = ""
@@ -19,6 +20,7 @@ class Config
 		self.video_resolution = ""
 		self.frame_interval = ""
 		self.virtual_dub_exe = ""
+		self.format = ""
 	
 	end
 	
@@ -33,7 +35,7 @@ class Config
 					:out_dir => self.out_dir,
 					:video_resolution => self.video_resolution,
 					:frame_interval => self.frame_interval,
-					:virtual_dub_exe => self.virtual_dub_exe
+					:format => self.format
 					}
 			puts values.to_json
 			File.open(strFile, 'w') { | file |
@@ -61,7 +63,7 @@ class Config
 			self.out_dir = values["out_dir"] || ""
 			self.video_resolution = values["video_resolution"] || ""
 			self.frame_interval = values["frame_interval"] || ""
-			self.virtual_dub_exe = values["virtual_dub_exe"] || ""
+			self.format = values["format"] || ""
 
 			puts "finished reading values"
 	
