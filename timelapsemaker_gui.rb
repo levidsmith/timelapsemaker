@@ -355,10 +355,10 @@ def checkValues(inFFMPEG, inSourceFolder, inFramesFolder, inOutputFolder, inVide
 	
 	end
 
-	if (!File.file? inVirtualDub)
-		strMessage +=  "Not a valid VirtualDub executable file: " + inVirtualDub + "\n"
-		hasErrors = true
-	end
+#	if (!File.file? inVirtualDub)
+#		strMessage +=  "Not a valid VirtualDub executable file: " + inVirtualDub + "\n"
+#		hasErrors = true
+#	end
 
 
 	
